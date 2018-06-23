@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/IndustryDetect">
+        <file>Resources/Demo.png</file>
+        <file>Resources/logo1.png</file>
+        <file>Resources/logo.ico</file>
+    </qresource>
+</RCC>
