@@ -1,5 +1,6 @@
 #include "ImageGet.h"
 #include <fstream>
+//保存图像数据 申请的缓冲区 mat0用于保存图像RGB三个通道数据 Mat时校正时需要
 unsigned char mat0[3][MAT_HEIGHT][MAT_WIDTH];
 
 unsigned char MAT[MAT_HEIGHT][MAT_WIDTH];
@@ -12,122 +13,33 @@ ImageGet::ImageGet(QObject *parent)
 
 ImageGet::~ImageGet()
 {
+	ImageGetInstance = nullptr;
 }
 
 //在此处初始化
-ImageGet* ImageGet::ImageGetInstance = new ImageGet();
+//ImageGet* ImageGet::ImageGetInstance = new ImageGet();
 
 ImageGet* ImageGet::getInstance()
 {
+	if (ImageGetInstance == nullptr)
+	{
+		ImageGetInstance = new ImageGet();
+	}
 	return ImageGetInstance;
 }
 
-/*void ImageGet::DataExtractToImg(unsigned char* data, Mat &DestImg)
-{
-	//int line_count = 0;
-	//int line_count_g = 0;
-	//int line_count_b = 0;		//行数
 
-	//memset(mat0, 0, 3 * MAT_HEIGHT*MAT_WIDTH);
-	////FPGA没有传废数据
-	//for (int data_ref = 0; data_ref < DATALENGTH; data_ref++)//data_ref数据偏移量
-	//{
-	//	//1、 0xA500015A   r分量数据
-	//	if (data[data_ref] == unsigned char(0xA5) && data[data_ref + 1] == unsigned char(0x00) && data[data_ref + 2] == unsigned char(0x01) && data[data_ref + 3] == unsigned char(0x5A))
-	//	{
-	//		data_ref += 4;
-	//		for (int pix_count = 0; pix_count < 2592; pix_count++)
-	//		{
-	//			mat0[0][line_count][pix_count] = data[data_ref + pix_count * 3];
-	//			mat0[0][line_count][2592 + pix_count] = data[data_ref + pix_count * 3 + 1];
-	//			if (pix_count < 2159)
-	//			{
-	//				mat0[0][line_count][5184 + pix_count] = data[data_ref + pix_count * 3 + 2];
-	//			}
-
-	//		}
-	//		line_count++;
-	//		//line_count_r_2++;
-	//		data_ref += 20000;
-	//		if (line_count > MAT_WIDTH || data_ref >= DATALENGTH)break;
-	//		//if(line_count_r>MAT_WIDTH)break;
-	//		else continue;
-	//	}
-
-
-	//	//2、 0xA500025A g
-	//	if (data[data_ref] == unsigned char(0xA5) && data[data_ref + 1] == unsigned char(0x00) && data[data_ref + 2] == unsigned char(0x02) && data[data_ref + 3] == unsigned char(0x5A))
-	//	{
-	//		data_ref += 4;
-	//		for (int pix_count = 0; pix_count < 2592; pix_count++)
-	//		{
-	//			mat0[1][line_count][pix_count] = data[data_ref + pix_count * 3];
-	//			mat0[1][line_count][2592 + pix_count] = data[data_ref + pix_count * 3 + 1];
-	//			if (pix_count < 2159)
-	//			{
-	//				mat0[1][line_count][5184 + pix_count] = data[data_ref + pix_count * 3 + 2];
-	//			}
-	//		}
-	//		line_count++;
-	//		//line_count_r_2++;
-	//		data_ref += 20000;
-	//		if (line_count > MAT_WIDTH || data_ref >= DATALENGTH)break;
-	//		//if(line_count_r>MAT_WIDTH)break;
-	//		else continue;
-	//	}
-
-
-	//	//3、 A500035A  b
-	//	if (data[data_ref] == unsigned char(0xA5) && data[data_ref + 1] == unsigned char(0x00) && data[data_ref + 2] == unsigned char(0x04) && data[data_ref + 3] == unsigned char(0x5A))
-	//	{
-
-	//		data_ref += 4;
-	//		for (int pix_count = 0; pix_count < 2592; pix_count++)
-	//		{
-	//			mat0[2][line_count][pix_count] = data[data_ref + pix_count * 3];
-	//			mat0[2][line_count][2592 + pix_count] = data[data_ref + pix_count * 3 + 1];
-	//			if (pix_count < 2159)
-	//			{
-	//				mat0[2][line_count][5184 + pix_count] = data[data_ref + pix_count * 3 + 2];
-	//			}
-
-	//		}
-	//		line_count++;
-	//		//line_count_r_2++;
-	//		data_ref += 20000;
-	//		if (line_count > MAT_WIDTH || data_ref >= DATALENGTH)break;
-	//		//if(line_count_r>MAT_WIDTH)break;
-	//		else continue;
-	//	}
-	//}
-	//IplImage* imgr0 = cvCreateImage(cvSize(MAT_HEIGHT, MAT_WIDTH), IPL_DEPTH_8U, 1); //size为图像宽高，depth为位深度，channels为通道数
-	//IplImage* imgg0 = cvCreateImage(cvSize(MAT_HEIGHT, MAT_WIDTH), IPL_DEPTH_8U, 1);
-	//IplImage* imgb0 = cvCreateImage(cvSize(MAT_HEIGHT, MAT_WIDTH), IPL_DEPTH_8U, 1);
-
-	//vector<Mat> RGBImg;
-	//Mat imag01r = Mat(MAT_WIDTH, MAT_HEIGHT, CV_8UC1, mat0[0]);
-	//Mat imag01g = Mat(MAT_WIDTH, MAT_HEIGHT, CV_8UC1, mat0[1]);
-	//Mat imag01b = Mat(MAT_WIDTH, MAT_HEIGHT, CV_8UC1, mat0[2]);
-	//Mat imag01 = Mat(MAT_WIDTH, MAT_HEIGHT, CV_8UC3, 3);
-	//RGBImg.push_back(imag01b);
-	//RGBImg.push_back(imag01g);
-	//RGBImg.push_back(imag01r);
-	//merge(RGBImg, imag01);
-
-	//DestImg = imag01;
-
-	//sprintf(buffer1, "image/test/outP_00%d.jpg", t);
-	//imwrite(buffer1, imag01);
-
-	//cvReleaseImage(&imgr0);
-	//cvReleaseImage(&imgg0);
-	//cvReleaseImage(&imgb0);
-
-
-
-
-}*/
-
+/***************************************************\
+*   
+* @FunctionName DataAnalysis
+* @author Zhaoyu
+* @date   2018年6月24日
+* @param[out] 
+* @param[in]  
+* @return     void
+* @brief 数据解析函数 根据标志位获取图片数据
+*
+****************************************************/
 void ImageGet::DataAnalysis()
 {
 	int line_count_r = 0;
@@ -135,7 +47,7 @@ void ImageGet::DataAnalysis()
 	int line_count_b = 0;		//行数
 
 	memset(mat0, 0, 3 * MAT_HEIGHT*MAT_WIDTH);
-	//FPGA没有传废数据
+
 	for (int data_ref = 0; data_ref < DATALENGTH; data_ref++)//data_ref数据偏移量
 	{
 		//1、 0xA500015A   r分量数据
@@ -207,15 +119,20 @@ void ImageGet::DataAnalysis()
 		}
 	}
 
-	ofstream file("test.txt", ios::out);
-
-	file << line_count_r << endl
-		<< line_count_g << endl
-		<< line_count_b << endl
-		<< mat0[0][3][5184] << endl;
-	file.close();
-
 }
+
+
+/***************************************************\
+*   
+* @FunctionName DataExtractToImg
+* @author Zhaoyu
+* @date   2018年6月24日
+* @param[out] DestImg
+* @param[in]  *data t
+* @return     void
+* @brief 1 解析数据 2 翻转图像 颜色补偿 3 保存图像到以时间命名的文件夹内
+*
+****************************************************/
 
 void ImageGet::DataExtractToImg(unsigned char* data, int t, Mat& DestImg)
 {
@@ -241,14 +158,14 @@ void ImageGet::DataExtractToImg(unsigned char* data, int t, Mat& DestImg)
 	Mat	img01G = Mat(MAT_HEIGHT, MAT_WIDTH, CV_8UC1);
 	Mat	img01B = Mat(MAT_HEIGHT, MAT_WIDTH, CV_8UC1);
 
-	//校正图像
+	
 
 	//翻转图像
 
 	flip(img01r, img01R, 0);
 	flip(img01g, img01G, 0);
 	flip(img01b, img01B, 0);
-
+	//校正图像
 	//imwrite("image//校正前r.jpg", img01R);
 	FilterLinerStrech(img01R, img01R, 1);
 	//imwrite("image//校正后r.jpg", img01R);
@@ -286,19 +203,11 @@ void ImageGet::DataExtractToImg(unsigned char* data, int t, Mat& DestImg)
 	RGBImg.clear();
 
 }
+
 void ImageGet::GenColorCorrectCoff(unsigned char* data)
 {
 	//提取数据
 	DataAnalysis();
-
-	//正面白光
-	//IplImage* img01rr = cvCreateImage(cvSize(ROW, COL), IPL_DEPTH_8U, 1); //size为图像宽高，depth为位深度，channels为通道数
-	//IplImage* img01gg = cvCreateImage(cvSize(ROW, COL), IPL_DEPTH_8U, 1);
-	//IplImage* img01bb = cvCreateImage(cvSize(ROW, COL), IPL_DEPTH_8U, 1);
-	//IplImage* img01RR = cvCreateImage(cvSize(ROW, COL), IPL_DEPTH_8U, 1);
-	//IplImage* img01GG = cvCreateImage(cvSize(ROW, COL), IPL_DEPTH_8U, 1);
-	//IplImage* img01BB = cvCreateImage(cvSize(ROW, COL), IPL_DEPTH_8U, 1);
-	//IplImage *image01_dst = cvCreateImage(cvSize(ROW, COL), IPL_DEPTH_8U, 3);
 
 	Mat img01rr = Mat(MAT_HEIGHT, MAT_WIDTH, CV_8UC1, mat0[0]);
 	Mat img01gg = Mat(MAT_HEIGHT, MAT_WIDTH, CV_8UC1, mat0[1]);
@@ -307,12 +216,6 @@ void ImageGet::GenColorCorrectCoff(unsigned char* data)
 	Mat img01RR = Mat(MAT_HEIGHT, MAT_WIDTH, CV_8UC1);
 	Mat	img01GG = Mat(MAT_HEIGHT, MAT_WIDTH, CV_8UC1);
 	Mat	img01BB = Mat(MAT_HEIGHT, MAT_WIDTH, CV_8UC1);
-
-		/*mimg01BBemcpy(img01rr->imageData, mat0[0], ROW * COL);
-	memcpy(img01gg->imageData, mat0[1], ROW * COL);
-	memcpy(img01bb->imageData, mat0[2], ROW * COL);*/
-
-	//imwrite("image//翻转前的图像.jpg", img01rr);
 
 	flip(img01rr, img01RR, 0);
 	flip(img01gg, img01GG, 0);
@@ -328,14 +231,6 @@ void ImageGet::GenColorCorrectCoff(unsigned char* data)
 
 	//cvSaveImage("image//校正后图像.jpg", img01RR);
 
-	/*cvReleaseImage(&img01rr);
-	cvReleaseImage(&img01bb);
-	cvReleaseImage(&img01gg);
-	cvReleaseImage(&image01_dst);
-	cvReleaseImage(&img01RR);
-	cvReleaseImage(&img01GG);
-	cvReleaseImage(&img01BB);*/
-
 }
 
 void ImageGet::CalCoefFilterLinerStrech(Mat &img_origin,Mat &dst, int color)
@@ -344,6 +239,8 @@ void ImageGet::CalCoefFilterLinerStrech(Mat &img_origin,Mat &dst, int color)
 	std::ofstream wofs;
 	std::ofstream mofs;
 	std::ofstream nofs;
+	int RowNumB = BLACK_ROW_END - BLACK_ROW_START;
+	int RowNumW = WHITE_ROW_END - WHITE_ROW_START;
 
 	if (color == 1)//RGB的R
 	{
@@ -393,21 +290,21 @@ void ImageGet::CalCoefFilterLinerStrech(Mat &img_origin,Mat &dst, int color)
 		//MCoeff[j] = 240 / (WCoeff[j] - BCoeff[j]);  //
 		//NCoeff[j] = 0 - MCoeff[j] * BCoeff[j];
 
-
 		//B_Coeff
-		for (int i = 3300; i < 3400; i++)//这个是逐条校正，每一条算两个校正参数,取十个像素点求平均值，减少误差   (600 700 1200 1300)
+		
+		for (int i = BLACK_ROW_START; i < BLACK_ROW_END; i++)//这个是逐条校正，每一条算两个校正参数,取十个像素点求平均值，减少误差   (600 700 1200 1300)
 		{
 			BCoeff[j] = BCoeff[j] + MAT[i][j];
 		}
-		BCoeff[j] = BCoeff[j] / 100;
+		BCoeff[j] = BCoeff[j] / RowNumB;  
 
 		//W_Coeff
-		for (int i = 1100; i < 1300; i++)
+		for (int i = WHITE_ROW_START; i < WHITE_ROW_END; i++)
 		{
 			WCoeff[j] = WCoeff[j] + MAT[i][j];
 		}
 
-		WCoeff[j] = WCoeff[j] / 200; 
+		WCoeff[j] = WCoeff[j] / RowNumW; 
 
 		MCoeff[j] = 240 / (WCoeff[j] - BCoeff[j]);  //
 		NCoeff[j] = 0 - MCoeff[j] * BCoeff[j];
@@ -448,7 +345,6 @@ void ImageGet::CalCoefFilterLinerStrech(Mat &img_origin,Mat &dst, int color)
 
 	memcpy(dst.data, MAT, MAT_HEIGHT * MAT_WIDTH);
 }
-
 
 void ImageGet::FilterLinerStrech(Mat &img_origin, Mat &dst, int color)
 {
@@ -501,11 +397,18 @@ void ImageGet::FilterLinerStrech(Mat &img_origin, Mat &dst, int color)
 	mifs.close();
 	nifs.close();
 }
-void ImageGet::CalColumnCoef(int column, int columnInstead, double b_coeff[7344], double w_coeff[7344])
-{
 
-}
-
+/***************************************************\
+*   
+* @FunctionName run
+* @author Zhaoyu
+* @date   2018年6月24日
+* @param[out] 
+* @param[in]  
+* @return     void
+* @brief 根据不同的功能码执行不同的操作
+*
+****************************************************/
 void ImageGet::run()
 {
 	
