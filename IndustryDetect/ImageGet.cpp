@@ -13,21 +13,20 @@ ImageGet::ImageGet(QObject *parent)
 
 ImageGet::~ImageGet()
 {
+	delete ImageGetInstance;
 	ImageGetInstance = nullptr;
 }
 
-//在此处初始化
-//ImageGet* ImageGet::ImageGetInstance = new ImageGet();
+ImageGet* ImageGet::ImageGetInstance = new ImageGet();
 
-ImageGet* ImageGet::getInstance()
+ImageGet*ImageGet::getInstance()
 {
 	if (ImageGetInstance == nullptr)
 	{
 		ImageGetInstance = new ImageGet();
 	}
 	return ImageGetInstance;
-}
-
+};
 
 /***************************************************\
 *   

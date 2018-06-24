@@ -84,7 +84,7 @@ class ImageGet : public QThread
 public:
 
 	static ImageGet* getInstance();
-
+	
 	void DataAnalysis();   //解析数据
 
 	void DataExtractToImg(unsigned char* data, int t, Mat&);  //拼接图像

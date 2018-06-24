@@ -7,9 +7,6 @@ CorrectWidget::CorrectWidget(QWidget *parent)
 {
 	ui.setupUi(this);
 
-	QString s = "状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息状态信息";
-	//s.append("1111");
-
 	QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	setSizePolicy(sizePolicy);
 
@@ -23,8 +20,8 @@ CorrectWidget::CorrectWidget(QWidget *parent)
 
 	imagegetForCorrect = ImageGet::getInstance();
 
-	ImageGet *imagegetForCorrect;
-
+	//控件
+	//按钮初始 UI设计
 	CorrectBtn = new QPushButton(QStringLiteral("校正系数生成"));
 	CorrectBtn->setMinimumWidth(110 * scale);
 	CorrectBtn->setMaximumWidth(110 * scale);
@@ -43,14 +40,10 @@ CorrectWidget::CorrectWidget(QWidget *parent)
 	reStoreCorrectCoeff->setStyleSheet("QPushButton{background-color: rgb(230, 230, 230);border-radius:3px;}"
 		"QPushButton:hover{ background-color: rgb(240, 240, 240);}");
 
-	BtnHLayout = new QHBoxLayout;
-	BtnHLayout->addWidget(CorrectBtn);
-	BtnHLayout->addWidget(reStoreCorrectCoeff);
-
 	illuLabel = new QLabel;
 
 	//illuLabel->setMaximumHeight(scale *);
-	
+
 	illuLabel->setMinimumHeight(scale * 300);
 	illuLabel->setMinimumWidth(scale * 300);
 	//illuLabel->alignment(QT::);
@@ -71,15 +64,19 @@ CorrectWidget::CorrectWidget(QWidget *parent)
 	illuLabel->setPixmap(QPixmap::fromImage(DemoImg).scaled(scale * 860, scale * 570));
 
 	illuLabel->setAlignment(Qt::AlignCenter);
+	//布局
+	//按钮布局
+	BtnHLayout = new QHBoxLayout;
 
+	BtnHLayout->addWidget(CorrectBtn);
+	BtnHLayout->addWidget(reStoreCorrectCoeff);
+	//整体布局
 	mainVLayout = new QVBoxLayout(this);
 	//mainVLayout->addStretch();
-
 	mainVLayout->addWidget(illuLabel);
 	mainVLayout->addLayout(BtnHLayout);
-	
-	//mainVLayout->addLayout(BtnHLayout);
 
+	//信号连接
 	connect(CorrectBtn, SIGNAL(clicked()), this, SLOT(CorrectCoffBtnClicked()));
 	connect(reStoreCorrectCoeff, SIGNAL(clicked()), this, SLOT(DataBackup()));
 
@@ -90,10 +87,12 @@ CorrectWidget::~CorrectWidget()
 	if (databuf != NULL)
 	{
 		delete databuf;
+		databuf = nullptr;
 	}
 	if (inbuf != NULL)
 	{
 		delete inbuf;
+		inbuf = nullptr;
 	}
 }
 

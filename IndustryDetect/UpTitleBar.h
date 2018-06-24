@@ -21,9 +21,15 @@ class UpTitleBar : public QWidget
 public:
 	UpTitleBar(QWidget *parent = Q_NULLPTR);
 	~UpTitleBar();
+	//UI
 	QLabel *titleLabel;
 	QWidget *logo;
 	QWidget *blank;
+	QPushButton *CloseBtn;
+	QPushButton *MaximizeBtn;
+	QPushButton *MinimazeBtn;
+	QLabel *labelInfo;
+	QLabel *stateLabel;  //显示进度信息
 
 	QHBoxLayout *hLayoutMain;
 
@@ -31,12 +37,7 @@ public:
 
 	QHBoxLayout *hLayoutState;
 
-	//title button
-	QPushButton *CloseBtn;
-	QPushButton *MaximizeBtn;
-	QPushButton *MinimazeBtn;
-	QLabel *labelInfo;
-	QLabel *stateLabel;  //显示进度信息
+
 
 protected:
 	// 重写按下鼠标事件

@@ -1,3 +1,12 @@
+/***************************************************************\
+* @Copyright(c) 2017 HUST-BIAC All rights reserved	
+* @ClassName  CorrectWidget
+* @Author  ZhaoYu
+* @Date  2018年6月24日
+* @Version 1.0
+* @Description 校正系数生成页面
+*
+******************************************************************/
 #pragma once
 
 #include <QWidget>
@@ -21,23 +30,25 @@ class CorrectWidget : public QWidget
 public:
 	CorrectWidget(QWidget *parent = Q_NULLPTR);
 	~CorrectWidget();
+	//func
 	CCyUSBDevice *CorrectUsbDevice;
-
 	ImageGet *imagegetForCorrect;
-	QPushButton *CorrectBtn;
-	QPushButton *reStoreCorrectCoeff;
-
-	QVBoxLayout *mainVLayout;
-	QHBoxLayout *BtnHLayout;
-
-	QLabel *illuLabel;
-
 	unsigned char *databuf = NULL;
 	unsigned char *inbuf = NULL;
 
+	//按钮
+	QPushButton *CorrectBtn;
+	QPushButton *reStoreCorrectCoeff;
+	//布局
+	QVBoxLayout *mainVLayout;
+	QHBoxLayout *BtnHLayout;
+	//Label
+	QLabel *illuLabel;
+
 	bool copyDirectoryFiles(const QString &fromDir, const QString &toDir, bool coverFileIfExist); //拷贝文件夹
+	
 	public slots:
-	void DataBackup();
+	void DataBackup();   //数据备份
 	void CorrectCoffBtnClicked();
 
 private:

@@ -27,21 +27,15 @@ public:
 	int ReceiveData();
 
 	//UI
-	QPushButton *ConnectBtn;
 	QPushButton *GetImgBtn;
-	//QPushButton *CorrectImgBtn;
-	//QPushButton *CorrectCoffBtn;
-	QProgressBar *progressBar;
-	//QProgressDialog *progressDlg;
-
+	QProgressBar *progressBar; //进度条
 	
 	mQLabel *ImageLabel;   //显示图片
 
 	QVBoxLayout *VLayoutmain;
-	
 	QHBoxLayout *HLayoutFunc;
 
-	//func
+	//功能
 	ImageGet *imageget;
 	QImage RGBImage;
 	Mat Image;
@@ -55,10 +49,11 @@ public:
 	void GetImgBtnClicked();
 	void CorrectCoffBtnClicked();
 	void setProgressBar(int);
-
 	void showDetail();
+
 signals:
 	void UpdateTitle(int);
+
 private:
 	Ui::IndustryDetectClass ui;
 };

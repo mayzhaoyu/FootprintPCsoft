@@ -18,8 +18,8 @@ IndustryDetect::IndustryDetect(QWidget *parent)
 
 	scale = dpiX / DEFAULT_DPI;
 
-
-	//progressDlg = new QProgressDialog(this);
+	//控件
+	//进度条
 	progressBar = new QProgressBar(this);
 	progressBar->setOrientation(Qt::Horizontal);  // 水平方向
 	progressBar->setMinimum(0);  // 最小值
@@ -27,7 +27,6 @@ IndustryDetect::IndustryDetect(QWidget *parent)
 	progressBar->setValue(0);  // 当前进度
 
 	//按钮
-
 	GetImgBtn = new QPushButton(QStringLiteral("采集图像"));
 	GetImgBtn->setMinimumWidth(100*scale);
 	GetImgBtn->setMaximumWidth(100 * scale);
@@ -70,27 +69,17 @@ IndustryDetect::IndustryDetect(QWidget *parent)
 	VLayoutmain = new QVBoxLayout(this);
 	HLayoutFunc = new QHBoxLayout(this);
 
-	//HLayoutFunc->addWidget();
-	//HLayoutFunc->addWidget(ConnectBtn);
-
-	//HLayoutFunc->addWidget(CorrectCoffBtn);
 	HLayoutFunc->addWidget(progressBar);
 	HLayoutFunc->addWidget(GetImgBtn);
-
-
 
 	VLayoutmain->addLayout(HLayoutFunc);
 	VLayoutmain->addWidget(ImageLabel);
 	
-
+	imageget = ImageGet::getInstance();
 	//信号连接
 	connect(GetImgBtn, SIGNAL(clicked()), this, SLOT(GetImgBtnClicked()));
-	//connect(CorrectCoffBtn, SIGNAL(clicked()), this, SLOT(CorrectCoffBtnClicked()));
-
-	imageget = ImageGet::getInstance();
-
 	connect(imageget, SIGNAL(ShowProgress(int)), this, SLOT(setProgressBar(int))/*, Qt::QueuedConnection*/);
-	connect(ImageLabel, SIGNAL(Doubleclicked()), this, SLOT(showDetail()));
+	connect(ImageLabel, SIGNAL(Doubleclicked()), this, SLOT(showDetail()));	
 }
 
 void IndustryDetect::showDetail()
